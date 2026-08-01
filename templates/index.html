@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Cortex — Neural Codebase Analysis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  <script src="https://unpkg.com/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="grid-bg" aria-hidden="true"></div>
+    <div class="scanline" aria-hidden="true"></div>
+
+    <header class="top-header">
+      <div class="brand-block">
+        <h1 class="brand-title">PROJECT CORTEX</h1>
+        <p class="brand-subtitle">NEURAL CODEBASE ANALYSIS SYSTEM</p>
+      </div>
+      <div class="system-status" id="system-status">
+        <span class="status-dot"></span>
+        <span>SYSTEM: ONLINE</span>
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <aside class="panel left-panel">
+        <section class="panel-section">
+          <h2 class="panel-heading">CONTROL</h2>
+          <div class="path-display" id="folder-path" title="No project selected">No project selected</div>
+          <div class="btn-stack">
+            <button type="button" class="btn btn-primary" id="btn-select">Select Project Folder</button>
+            <button type="button" class="btn btn-accent" id="btn-analyze" disabled>Analyze Project</button>
+            <button type="button" class="btn btn-ghost" id="btn-up" disabled>Up One Level</button>
+            <button type="button" class="btn btn-ghost" id="btn-recenter" disabled>Recenter Graph</button>
+            <button type="button" class="btn btn-ghost" id="btn-reset">Reset</button>
+          </div>
+          <label class="toggle-row">
+            <input type="checkbox" id="toggle-external" />
+            <span>Show External Dependencies</span>
+          </label>
+          <div class="scan-status" id="scan-status">Ready</div>
+        </section>
+
+        <section class="panel-section">
+          <h2 class="panel-heading">PROJECT STATISTICS</h2>
+          <dl class="stats-list" id="stats-list">
+            <div class="stat-row"><dt>Project</dt><dd>—</dd></div>
+            <div class="stat-row"><dt>Python files</dt><dd>—</dd></div>
+            <div class="stat-row"><dt>Folders</dt><dd>—</dd></div>
+            <div class="stat-row"><dt>Local links</dt><dd>—</dd></div>
+            <div class="stat-row"><dt>External deps</dt><dd>—</dd></div>
+            <div class="stat-row"><dt>Total lines</dt><dd>—</dd></div>
+            <div class="stat-row"><dt>Entry points</dt><dd>—</dd></div>
+            <div class="stat-row"><dt>Largest file</dt><dd>—</dd></div>
+            <div class="stat-row"><dt>Most connected</dt><dd>—</dd></div>
+          </dl>
+        </section>
+
+        <section class="panel-section grow">
+          <h2 class="panel-heading">EXTERNAL DEPENDENCIES</h2>
+          <div class="tag-cloud" id="external-tags">
+            <span class="muted">None detected</span>
+          </div>
+        </section>
+
+        <section class="panel-section" id="warnings-section" hidden>
+          <h2 class="panel-heading warn">WARNINGS</h2>
+          <ul class="warnings-list" id="warnings-list"></ul>
+        </section>
+      </aside>
+
+      <section class="viz-panel">
+        <div class="viz-frame">
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+          <div class="view-bar" id="view-bar" hidden>
+            <span class="view-label">VIEW</span>
+            <nav class="breadcrumb" id="breadcrumb"></nav>
+            <span class="view-hint">Double-click a folder to open it</span>
+          </div>
+          <div id="cy" class="cy-root"></div>
+          <div class="viz-empty" id="viz-empty">
+            <p class="empty-title">AWAITING PROJECT</p>
+            <p class="empty-copy">Select a Python project folder and run analysis to map its neural structure.</p>
+          </div>
+          <div class="viz-legend">
+            <span class="legend-item folder"><i></i> Folder</span>
+            <span class="legend-item entry"><i></i> Entry point</span>
+            <span class="legend-item normal"><i></i> File</span>
+            <span class="legend-item disconnected"><i></i> Possibly disconnected</span>
+            <span class="legend-item error"><i></i> Parse error</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel right-panel">
+        <section class="panel-section">
+          <h2 class="panel-heading" id="inspect-heading">IDENTITY</h2>
+          <div id="inspect-empty" class="inspect-empty">
+            Select a neuron to inspect. Double-click a folder to open it.
+          </div>
+          <div id="inspect-body" hidden>
+            <dl class="inspect-list" id="inspect-list"></dl>
+            <h3 class="sub-heading">CONNECTED FILES</h3>
+            <ul class="connected-list" id="connected-list"></ul>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <div class="overlay" id="scan-overlay" hidden>
+    <div class="overlay-card">
+      <p class="overlay-kicker">CORTEX ENGINE</p>
+      <p class="overlay-message" id="overlay-message">INITIALIZING PROJECT SCAN</p>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <p class="overlay-percent" id="overlay-percent">0%</p>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
