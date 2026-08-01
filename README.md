@@ -1,49 +1,54 @@
-# Project Cortex
+# Cortex Neural
 
-**Neural Codebase Analysis System**
+**Project Cortex — Neural Codebase Analysis System**
 
-Project Cortex is a local, read-only visual scanner that turns a Python project into an interactive glowing neural network. Select a project folder, analyze imports and relationships, and explore the “brain” of the codebase as a holographic graph.
+Turn a local Python project into an interactive glowing neural network.
+
+Cortex scans your folder, maps imports and relationships, and lets you explore the “brain” of the codebase — folders first, then drill into files.
 
 ![Screenshot placeholder](docs/screenshot-placeholder.png)
 
-> *Add a screenshot of the neural graph view here after your first run.*
+> Drop a real screenshot here when you have one (`docs/screenshot-placeholder.png`).
+
+---
+
+## What it does
+
+1. You select a Python project folder
+2. Cortex analyzes `.py` files, imports, entry points, and connections
+3. The project appears as a neural graph
+4. Double-click a folder to open what’s inside and remap connections
+5. Click any file neuron to inspect details
+
+Everything runs **locally**. Read-only. No cloud. No account.
 
 ---
 
 ## Features
 
-- Native folder selection (Tkinter dialog)
-- Recursive Python file discovery with safe ignore rules
-- AST-based import parsing and local import resolution
-- Directed synaptic graph of file relationships (Cytoscape.js)
-- Entry-point detection and importance scoring
+- One-click Windows launcher (`run.bat` / desktop **CORTEX** shortcut)
+- Native folder picker (Tkinter)
+- AST-based import parsing + local import resolution
+- Folder-first neural graph with drill-down navigation
+- File neurons sized by importance
+- Entry-point highlighting
 - Possibly-disconnected file heuristics
-- External dependency listing (kept off the main graph by default)
-- Futuristic dark HUD interface with scan animation
-- Click-to-inspect file identity panel
+- External dependencies listed separately (optional on-graph toggle)
+- Futuristic dark HUD UI + short scan animation
 - Zoom, pan, drag, recenter
-- Graceful handling of unreadable files, syntax errors, and large projects
+- Safe ignore rules (`venv`, `__pycache__`, `.git`, etc.)
+- Soft cap ~300 Python files so huge repos don’t freeze
 
 ---
 
-## Installation
+## Quick start (Windows)
 
-```bash
-cd project-cortex
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-```
+### Option A — one click
 
----
+Double-click **`run.bat`**  
+or use the desktop / Start Menu shortcut named **CORTEX**.
 
-## How to run
-
-**One-click (Windows):** double-click `run.bat`
-
-That script creates `venv` if needed, installs requirements, and starts the app.
-
-Or manually:
+### Option B — terminal
 
 ```bash
 python -m venv venv
@@ -52,76 +57,99 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Your browser should open to [http://127.0.0.1:5000](http://127.0.0.1:5000).
+Browser opens to [http://127.0.0.1:5000](http://127.0.0.1:5000).
 
-1. Click **Select Project Folder**
-2. Choose a local Python project
-3. Click **Analyze Project**
-4. Explore the neural network and click any neuron for details
+Then:
 
-**Tip:** If the folder dialog is unavailable in your environment, press `Ctrl+Shift+P` in the app and paste a folder path manually.
+1. **Select Project Folder**
+2. **Analyze Project**
+3. Explore the graph
+4. **Double-click a folder** to open it
+5. Use **Up One Level**, breadcrumb, or Backspace to go back
 
----
-
-## Supported project type
-
-- **Python projects only** (`.py` files)
-- Local folders on the machine running the Flask server
-- Typical layouts: apps, scripts, packages, Flask/Django-style trees
+Tip: `Ctrl+Shift+P` lets you paste a folder path if the dialog fails.
 
 ---
 
-## Current limitations
+## Requirements
 
-- Single-language support (Python)
-- Import resolution is heuristic; dynamic imports are not resolved
-- Possibly-disconnected detection is a heuristic — verify before deleting anything
-- Very large projects are capped at ~300 Python files
-- Folder dialog requires a desktop session (Tkinter)
-- Read-only: never modifies, deletes, or executes project code
-- Circular imports are tolerated as normal directed edges
-
----
-
-## Safety
-
-Project Cortex is **read-only**. It inspects source files locally and never:
-
-- Modifies or deletes files
-- Executes project code
-- Installs project dependencies
-- Sends source code to external APIs
+- Python 3
+- Windows recommended for the folder dialog + `run.bat`
+- Flask (installed via `requirements.txt`)
+- Cytoscape.js loaded from CDN in the browser
 
 ---
 
 ## Project structure
 
 ```text
-project-cortex/
-├── app.py
-├── scanner.py
+cortex-neural/
+├── app.py              # Flask server + folder dialog
+├── scanner.py          # AST scan, imports, graph JSON
 ├── requirements.txt
+├── run.bat             # One-click launcher
 ├── README.md
 ├── templates/
 │   └── index.html
-└── static/
-    ├── styles.css
-    └── app.js
+├── static/
+│   ├── styles.css
+│   └── app.js
+└── sample_project/     # Tiny demo project for testing
 ```
 
 ---
 
-## Future improvements
+## How analysis works
 
-1. Multi-language support (JavaScript, TypeScript, Go)
-2. Export graph as PNG / SVG / JSON
-3. Timeline view of dependency change across git history
-4. Smarter role detection with lightweight pattern libraries
-5. Optional 3D / WebGL neural rendering
-6. Search and filter neurons by role, folder, or importance
+| Piece | Behavior |
+| --- | --- |
+| Files | Each `.py` file becomes a neuron |
+| Imports | `import` / `from ... import` parsed with `ast` |
+| Local links | Resolved to project files when possible |
+| External packages | Flask, requests, etc. listed separately |
+| Entry points | `__main__` guards + names like `app.py`, `main.py` |
+| Importance | Incoming/outgoing links + size + entry bonus |
+| Folders | Aggregated at each view level; double-click drills in |
+
+---
+
+## Safety
+
+Cortex is **read-only**. It never:
+
+- Modifies or deletes your code
+- Executes project code
+- Installs the scanned project’s dependencies
+- Sends source code to any external API
+
+---
+
+## Limitations
+
+- Python only
+- Dynamic imports are not resolved
+- “Possibly disconnected” is a heuristic — verify before deleting
+- Large projects capped around 300 files
+- Folder dialog needs a desktop session
+
+---
+
+## Sample project
+
+Use `sample_project/` to try the graph quickly after launch.
+
+---
+
+## Future ideas
+
+1. Export graph (PNG / SVG / JSON)
+2. Search and filter by role / folder / importance
+3. Multi-language support (JS/TS/Go)
+4. Git-history dependency timeline
+5. Custom CORTEX app icon
 
 ---
 
 ## License
 
-Personal / educational use. Built as a local engineering analysis tool.
+Personal / educational use.
