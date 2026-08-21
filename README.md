@@ -6,9 +6,7 @@ Turn a local Python project into an interactive glowing neural network.
 
 Cortex scans your folder, maps imports and relationships, and lets you explore the “brain” of the codebase — folders first, then drill into files.
 
-![Screenshot placeholder](docs/screenshot-placeholder.png)
-
-> Drop a real screenshot here when you have one (`docs/screenshot-placeholder.png`).
+![Project Cortex dashboard](docs/cortex-dashboard.jpg)
 
 ---
 
