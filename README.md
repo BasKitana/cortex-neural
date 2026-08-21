@@ -1,3 +1,4 @@
+
 # Cortex Neural
 
 **Project Cortex — Neural Codebase Analysis System**
@@ -6,7 +7,7 @@ Turn a local Python project into an interactive glowing neural network.
 
 Cortex scans your folder, maps imports and relationships, and lets you explore the “brain” of the codebase — folders first, then drill into files.
 
-![Project Cortex](Screenshot_20-8-2026_23205_127.0.0.1.jpeg)
+<img width="2521" height="958" alt="Screenshot_20-8-2026_23205_127 0 0 1" src="https://github.com/user-attachments/assets/33ca525d-bab5-4061-822f-c711a9c29aa9" />
 
 ---
 
